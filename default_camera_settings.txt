@@ -1,0 +1,4 @@
+Default shutter speed: 0
+Default exposure mode: auto
+Default framerate: 30
+Default iso: 0
