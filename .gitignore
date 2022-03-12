@@ -130,3 +130,12 @@ dmypy.json
 
 # Some weird trash folder
 .Trash-1000/
+
+# Images
+*.jpg
+*.png
+*.bmp
+*.webp
+
+# Image Directory
+captures/

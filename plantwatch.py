@@ -28,6 +28,7 @@ class PlantWatch:
         self.hflip: bool = self.__config['HFLIP']
         self.metadata_font_size: int = int(self.__config['METADATA_FONT_SIZE'])
         self.image_data = None
+        self.brightness_level: float = 0
         self.shutter_speed: float = 1_000_000
 
     @property
@@ -76,18 +77,17 @@ class PlantWatch:
         draw = ImageDraw.Draw(image)
         fs: int = self.metadata_font_size
 
-	font = ImageFont.truetype(f"{str(pathlib.Path(__file__).parent.resolve())}/fonts/Ubuntu-Regular.ttf", fs)
+        font = ImageFont.truetype(f"{str(pathlib.Path(__file__).parent.resolve())}/fonts/Ubuntu-Regular.ttf", fs)
 
-	draw.text((10,10), f"Framerate: {framerate}", font=font)
-	draw.text((10,10 + fs), f"Shutter Speed: {shutter_speed}", font=font, fill=(0,255,0,255))
-        draw.text((10,10 + fs*2), f"Framerate: {framerate}", font=font, fill=(0,255,0,255))
+        draw.text((10,10), f"Framerate: {framerate}", font=font, fill=(0,255,0,255))
+        draw.text((10,10 + fs), f"Shutter Speed: {shutter_speed}", font=font, fill=(0,255,0,255))
+        draw.text((10,10 + fs*2), f"Brightness level: {round(self.brightness_level, 2)}", font=font, fill=(0,255,0,255))
         draw.text((10,10 + fs*3), f"ISO: {iso}", font=font, fill=(0,255,0,255))
         draw.text((10,10 + fs*4), f"Exposure Mode: {exposure_mode}", font=font, fill=(0,255,0,255))
 
         return image
 
-    @staticmethod
-    def brightness_analysis(image) -> float:
+    def brightness_analysis(self, image) -> None:
         '''
         Take image
         Convert to grayscale
@@ -104,8 +104,7 @@ class PlantWatch:
                 total += im_grey.getpixel((i, j))[0]
 
         mean: float = total / (width * height)
-        logging.info(mean)
-        return mean
+        self.brightness_level = mean
 
     def shutter_adjustment(self, brightness_level: float) -> None:
 
@@ -139,8 +138,8 @@ class PlantWatch:
         Take final picture
         '''
         self.image_data = self.capture()
-        brightness = PlantWatch.brightness_analysis(self.image_data)
-        self.shutter_adjustment(brightness)
+        self.brightness_analysis(self.image_data)
+        self.shutter_adjustment(self.brightness_level)
 
 
         image = self.capture(shutter_speed=self.shutter_speed,
