@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 from dotenv import dotenv_values
 from io import BytesIO
 from typing import Dict, Any
@@ -28,7 +26,7 @@ class PlantWatch:
         self.save_path: str = str(self.absolute_path) + '/' + str(self.__config['SAVE_PATH'])
         self.vflip: bool = self.__config['VFLIP']
         self.hflip: bool = self.__config['HFLIP']
-        self.metadata_font_size: int = self.__config['METADATA_FONT_SIZE']
+        self.metadata_font_size: int = int(self.__config['METADATA_FONT_SIZE'])
         self.image_data = None
         self.shutter_speed: float = 1_000_000
 
@@ -76,10 +74,15 @@ class PlantWatch:
 
         # Adding Metadata information
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype(f"{str(pathlib.Path(__file__).parent.resolve())}/fonts/Ubuntu-Regular.ttf", 50)
-        draw.text((10,10), f"Framerate: {framerate}", font=font)
-        draw.text((10,25), f"Shutter Speed: {shutter_speed}", font=font)
-        draw.text((10,40), f"Exposure Mode: {exposure_mode}", font=font)
+        fs: int = self.metadata_font_size
+
+	font = ImageFont.truetype(f"{str(pathlib.Path(__file__).parent.resolve())}/fonts/Ubuntu-Regular.ttf", fs)
+
+	draw.text((10,10), f"Framerate: {framerate}", font=font)
+	draw.text((10,10 + fs), f"Shutter Speed: {shutter_speed}", font=font, fill=(0,255,0,255))
+        draw.text((10,10 + fs*2), f"Framerate: {framerate}", font=font, fill=(0,255,0,255))
+        draw.text((10,10 + fs*3), f"ISO: {iso}", font=font, fill=(0,255,0,255))
+        draw.text((10,10 + fs*4), f"Exposure Mode: {exposure_mode}", font=font, fill=(0,255,0,255))
 
         return image
 
