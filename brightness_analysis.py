@@ -20,13 +20,16 @@ if __name__ == "__main__":
     x = PlantWatch()
     now = datetime.now()
 
+    initial_image = x.capture()
+    brightness_level = x.brightness_analysis(initial_image)
+
     time_str = now.strftime("%H") + '-' + now.strftime("%M") + '-' + now.strftime("%S")
-    shutter_speeds = [100, 1000, 10000, 100000]
+    shutter_speeds = [100_000, 150_000, 200_000]
 
 
     for speed in shutter_speeds:
         print(f"Writing image of {speed} exposure...")
-        image = x.capture(shutter_speed=speed, framerate=Fraction(1,6), exposure_mode='off', iso=800)
+        image = x.capture(shutter_speed=speed, framerate=Fraction(1,6), brightness_level=x.brightness_level, exposure_mode='off', iso=800)
 
         image.save(f'adjustment_captures/{time_str}-{speed}.jpg')
 

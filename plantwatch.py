@@ -110,14 +110,20 @@ class PlantWatch:
 
     def shutter_adjustment(self, brightness_level: float) -> None:
 
-        if  50 <= brightness_level < 150:
-            logging.info(f'Image is slightly dark, brightness level is {brightness_level}')
-            self.shutter_speed = 300_000
+
+        if  60 <= brightness_level < 200:
+            logging.info(f'Image is bright, brightness level is {brightness_level}')
+            self.shutter_speed = 100_000
             logging.info(f'Setting shutter speed to {self.shutter_speed}')
             return
-        elif  25 <= brightness_level < 50:
+        elif 50 <= brightness_level < 60:
+            logging.info(f'Image is bright, brightness level is {brightness_level}')
+            self.shutter_speed = 150_000
+            logging.info(f'Setting shutter speed to {self.shutter_speed}')
+            return
+        elif 25 <= brightness_level < 50:
             logging.info(f'Image is dark, brightness level is {brightness_level}')
-            self.shutter_speed = 500_000
+            self.shutter_speed = 200_000
             logging.info(f'Setting shutter speed to {self.shutter_speed}')
             return
         elif 10 <= brightness_level < 25:
