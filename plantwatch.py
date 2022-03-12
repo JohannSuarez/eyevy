@@ -47,6 +47,7 @@ class PlantWatch:
     def capture(self, shutter_speed: int = 0,
                       framerate = Fraction(30),
                       exposure_mode: str = 'auto',
+                      brightness_level: float = 0,
                       iso: int = 0):
         '''
         Use this method with no parameters
@@ -81,7 +82,7 @@ class PlantWatch:
 
         draw.text((10,10), f"Framerate: {framerate}", font=font, fill=(0,255,0,255))
         draw.text((10,10 + fs), f"Shutter Speed: {shutter_speed}", font=font, fill=(0,255,0,255))
-        draw.text((10,10 + fs*2), f"Brightness level: {round(self.brightness_level, 2)}", font=font, fill=(0,255,0,255))
+        draw.text((10,10 + fs*2), f"Brightness level: {round(brightness_level, 2)}", font=font, fill=(0,255,0,255))
         draw.text((10,10 + fs*3), f"ISO: {iso}", font=font, fill=(0,255,0,255))
         draw.text((10,10 + fs*4), f"Exposure Mode: {exposure_mode}", font=font, fill=(0,255,0,255))
 
@@ -105,6 +106,7 @@ class PlantWatch:
 
         mean: float = total / (width * height)
         self.brightness_level = mean
+
 
     def shutter_adjustment(self, brightness_level: float) -> None:
 
@@ -141,9 +143,9 @@ class PlantWatch:
         self.brightness_analysis(self.image_data)
         self.shutter_adjustment(self.brightness_level)
 
-
         image = self.capture(shutter_speed=self.shutter_speed,
                              framerate=Fraction(1,6),
+                             brightness_level=self.brightness_level,
                              exposure_mode='off',
                              iso=800)
 

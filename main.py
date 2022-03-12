@@ -1,4 +1,4 @@
-! /usr/bin/python3
+#! /usr/bin/python3
 from plantwatch import PlantWatch
 
 if __name__ == "__main__":
