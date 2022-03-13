@@ -131,7 +131,11 @@ class PlantWatch:
             self.shutter_speed = 400_000
             logging.info(f'Setting shutter speed to {self.shutter_speed}')
             return
-        elif 0 <= brightness_level < 10:
+        elif 10 <= brightness_level < 3:
+            logging.info(f'Image is dark, brightness level is {brightness_level}')
+            self.shutter_speed = 600_000
+            logging.info(f'Setting shutter speed to {self.shutter_speed}')
+        elif 3 <= brightness_level < 0:
             logging.info(f'Image is dark, brightness level is {brightness_level}')
             self.shutter_speed = 6_000_000
             logging.info(f'Setting shutter speed to {self.shutter_speed}')
