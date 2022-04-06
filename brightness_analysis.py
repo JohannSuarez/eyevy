@@ -10,13 +10,13 @@ from PIL import Image
 import pathlib
 
 if __name__ == "__main__":
-    '''
+    """
     First get the brightness level with an initial capture.
     Then, take 4 different pictures with different exposure levels
 
     TO DO:
     Code in the initial capture to get the brightness level.
-    '''
+    """
     x = PlantWatch()
     now = datetime.now()
 

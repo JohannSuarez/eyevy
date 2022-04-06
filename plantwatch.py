@@ -13,13 +13,13 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 class PlantWatch:
-    '''
-    Responsibilities:
+    """
+    @desc Responsibilities:
         - Pre-assess the scene to determine optimal picam parameters.
         - Load configs from env file. They include:
             - Directory location for image storage.
             - If VFLIP or HFLIP are enabled. (If camera is upsidedown or sideways)
-    '''
+    """
 
     def __init__(self):
         self.__config: Dict[str, Any] = dotenv_values(str(self.absolute_path) + '/' + '.env')
@@ -29,7 +29,7 @@ class PlantWatch:
         self.metadata_font_size: int = int(self.__config['METADATA_FONT_SIZE'])
         self.image_data = None
         self.brightness_level: float = 0
-        self.shutter_speed: float = 1_000_000
+        self.shutter_speed: float = 6_000_000
 
     @property
     def absolute_path(self) -> Path:
@@ -49,11 +49,11 @@ class PlantWatch:
                       exposure_mode: str = 'auto',
                       brightness_level: float = 0,
                       iso: int = 0):
-        '''
-        Use this method with no parameters
+        """
+        @desc Use this method with no parameters
         to get a raw, unbiased image for analysis.
         Image is stored as PIL.
-        '''
+        """
         # Create the in-memory stream
         stream = BytesIO()
         camera = PiCamera()
@@ -89,11 +89,9 @@ class PlantWatch:
         return image
 
     def brightness_analysis(self, image) -> None:
-        '''
-        Take image
-        Convert to grayscale
-        Get the average
-        '''
+        """
+        @desc Take image, convert to grayscale, and get the average.
+        """
         logging.info(f'Conducting brightness analysis of {image}')
 
         im_grey = image.convert('LA')
@@ -138,17 +136,17 @@ class PlantWatch:
         elif 3 <= brightness_level < 0:
             logging.info(f'Image is dark, brightness level is {brightness_level}')
             self.shutter_speed = 6_000_000
+            print(f'Setting shutter speed to {self.shutter_speed}')
             logging.info(f'Setting shutter speed to {self.shutter_speed}')
             return
 
 
     def measured_snap(self) -> None:
-        '''
-        Take initial picture
-        Determine if too bright or too dark
-        Make adjustments
-        Take final picture
-        '''
+        """
+        @desc Take initial picture, determine if too bright or too dark,
+        make adjustments, then take the final picture.
+        """
+
         self.image_data = self.capture()
         self.brightness_analysis(self.image_data)
         self.shutter_adjustment(self.brightness_level)
